@@ -1,66 +1,109 @@
 package com.praktikum.whitebox.model;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import com.praktikum.whitebox.util.ValidationUtils;
 
-public class KategoriTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class KategoriTest {
 
     @Test
-    void testConstructorAndGetters() {
-        Kategori kategori = new Kategori("K01", "Elektronik", "Barang-barang elektronik");
-        assertEquals("K01", kategori.getKode());
-        assertEquals("Elektronik", kategori.getNama());
-        assertEquals("Barang-barang elektronik", kategori.getDeskripsi());
-        assertTrue(kategori.isAktif()); // default aktif = true
+    void testDefaultConstructor() {
+        Kategori kategori = new Kategori();
+        assertNull(kategori.getKode());
+        assertNull(kategori.getNama());
+        assertNull(kategori.getDeskripsi());
+        assertFalse(kategori.isAktif()); // default boolean = false
     }
 
     @Test
-    void testSetters() {
-        Kategori kategori = new Kategori();
-        kategori.setKode("K02");
-        kategori.setNama("Fashion");
-        kategori.setDeskripsi("Produk pakaian");
-        kategori.setAktif(false);
+    void testConstructorWithArgs() {
+        Kategori kategori = new Kategori("K001", "Makanan", "Kategori makanan");
+        assertEquals("K001", kategori.getKode());
+        assertEquals("Makanan", kategori.getNama());
+        assertEquals("Kategori makanan", kategori.getDeskripsi());
+        assertTrue(kategori.isAktif()); // constructor set aktif = true
+    }
 
-        assertEquals("K02", kategori.getKode());
-        assertEquals("Fashion", kategori.getNama());
-        assertEquals("Produk pakaian", kategori.getDeskripsi());
-        assertFalse(kategori.isAktif());
+    @Test
+    void testSettersAndGetters() {
+        Kategori kategori = new Kategori();
+        kategori.setKode("K002");
+        kategori.setNama("Minuman");
+        kategori.setDeskripsi("Kategori minuman");
+        kategori.setAktif(true);
+
+        assertEquals("K002", kategori.getKode());
+        assertEquals("Minuman", kategori.getNama());
+        assertEquals("Kategori minuman", kategori.getDeskripsi());
+        assertTrue(kategori.isAktif());
     }
 
     @Test
     void testEqualsAndHashCode() {
-        Kategori k1 = new Kategori("K03", "Makanan", "Produk makanan");
-        Kategori k2 = new Kategori("K03", "Minuman", "Produk minuman");
-        Kategori k3 = new Kategori("K04", "Alat", "Peralatan");
+        Kategori k1 = new Kategori("K003", "Snack", "Cemilan");
+        Kategori k2 = new Kategori("K003", "Camilan", "Makanan Ringan");
+        Kategori k3 = new Kategori("K004", "Buah", "Buah Segar");
 
-        assertEquals(k1, k2); // sama karena kode sama
+        // equals berdasarkan kode
+        assertEquals(k1, k2);
         assertNotEquals(k1, k3);
+
+        // hashCode juga berdasarkan kode
         assertEquals(k1.hashCode(), k2.hashCode());
+        assertNotEquals(k1.hashCode(), k3.hashCode());
+    }
+
+    @Test
+    void testEqualsWithDifferentObject() {
+        Kategori kategori = new Kategori("K005", "Sayur", "Sayuran");
+        assertNotEquals(kategori, "string");
+        assertNotEquals(kategori, null);
     }
 
     @Test
     void testToString() {
-        Kategori kategori = new Kategori("K05", "Buku", "Produk buku");
+        Kategori kategori = new Kategori("K006", "Daging", "Produk daging");
         String str = kategori.toString();
-        assertNotNull(str);
-        assertTrue(str.contains("K05"));
-        assertTrue(str.contains("Buku"));
+
+        assertTrue(str.contains("K006"));
+        assertTrue(str.contains("Daging"));
+        assertTrue(str.contains("Produk daging"));
+        assertTrue(str.contains("aktif=true"));
+    }
+    @Test
+    void testEqualsSelf() {
+        Kategori kategori = new Kategori("K007", "Elektronik", "Barang elektronik");
+        assertEquals(kategori, kategori); // harus true saat dibandingkan dengan dirinya sendiri
     }
 
     @Test
-    void testValidationUtilsWithKategori() {
-        Kategori validKategori = new Kategori("K06", "Gadget", "Smartphone dan aksesoris");
-        assertTrue(ValidationUtils.isValidKategori(validKategori));
-
-        Kategori invalidKode = new Kategori("X", "Gadget", "Deskripsi");
-        assertFalse(ValidationUtils.isValidKategori(invalidKode));
-
-        Kategori invalidNama = new Kategori("K07", "A", "Deskripsi");
-        assertFalse(ValidationUtils.isValidKategori(invalidNama));
-
-        Kategori invalidDeskripsi = new Kategori("K08", "Gadget", "a".repeat(600));
-        assertFalse(ValidationUtils.isValidKategori(invalidDeskripsi));
+    void testHashCodeConsistency() {
+        Kategori kategori = new Kategori("K008", "Perabot", "Barang rumah tangga");
+        int hash1 = kategori.hashCode();
+        int hash2 = kategori.hashCode();
+        assertEquals(hash1, hash2); // konsisten
     }
+
+    @Test
+    void testSetAktifFalse() {
+        Kategori kategori = new Kategori("K009", "Pakaian", "Kategori pakaian");
+        kategori.setAktif(false);
+        assertFalse(kategori.isAktif());
+    }
+
+    @Test
+    void testToStringWhenNotActive() {
+        Kategori kategori = new Kategori();
+        kategori.setKode("K010");
+        kategori.setNama("Kosmetik");
+        kategori.setDeskripsi("Produk kecantikan");
+        kategori.setAktif(false);
+
+        String str = kategori.toString();
+        assertTrue(str.contains("K010"));
+        assertTrue(str.contains("Kosmetik"));
+        assertTrue(str.contains("Produk kecantikan"));
+        assertTrue(str.contains("aktif=false")); // pastikan boolean false ikut tercetak
+    }
+
 }

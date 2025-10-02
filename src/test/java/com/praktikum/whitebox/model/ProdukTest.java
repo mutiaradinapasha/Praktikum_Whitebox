@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-
 import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Test Class Produk - White Box Testing")
 public class ProdukTest {
@@ -126,5 +125,40 @@ public class ProdukTest {
         assertEquals(produk1, produk2); // kode sama
         assertNotEquals(produk1, produk3); // kode berbeda
         assertEquals(produk1.hashCode(), produk2.hashCode());
+    }
+    @Test
+    @DisplayName("Test constructor baru dengan 4 parameter")
+    void testConstructorBaru() {
+        Produk p = new Produk("P002", "Mouse", 50000, 20);
+        assertEquals("P002", p.getKode());
+        assertEquals("Mouse", p.getNama());
+        assertEquals(50000, p.getHarga(), 0.001);
+        assertEquals(20, p.getStok());
+        assertEquals(0, p.getStokMinimum()); // default
+        assertTrue(p.isAktif()); // default
+    }
+
+    @Test
+    @DisplayName("Test getter dan setter aktif")
+    void testAktifSetterGetter() {
+        produk.setAktif(false);
+        assertFalse(produk.isAktif());
+        produk.setAktif(true);
+        assertTrue(produk.isAktif());
+    }
+
+    @Test
+    @DisplayName("Test toString method")
+    void testToString() {
+        String str = produk.toString();
+        assertTrue(str.contains("PROD001"));
+        assertTrue(str.contains("Laptop Gaming"));
+        assertTrue(str.contains("Elektronik"));
+    }
+    @Test
+    @DisplayName("Test equals dengan null dan tipe berbeda")
+    void testEqualsNullAndDifferentType() {
+        assertNotEquals(produk, null);
+        assertNotEquals(produk, "String");
     }
 }
